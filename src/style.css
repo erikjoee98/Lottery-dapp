@@ -1,0 +1,269 @@
+/* Alapok */
+body {
+    font-family: 'Roboto Mono', monospace;
+    color: #fff;
+    background-color: #1c1c1e;
+    margin: 0;
+    padding: 0;
+}
+
+/* Fejléc */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.header h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2em;
+    color: #00ffff;
+    margin: 0;
+}
+
+.header nav a {
+    margin: 0 15px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1em;
+}
+
+.header nav a:hover {
+    color: #ffd700;
+}
+
+/* Navigációs gombok */
+nav .info-button {
+    margin-left: 15px;
+    padding: 10px 15px;
+    font-size: 0.9em;
+    color: #000;
+    background-color: #00ffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+nav .info-button:hover {
+    background-color: #ffd700;
+}
+
+/* Fő tartalom */
+.main-content {
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.card {
+    background: #333;
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    background: #444;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    background-color: #00ffff;
+    color: #000;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #ffd700;
+}
+
+/* Lábjegyzet */
+/* Footer Styling */
+.styled-footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0; /* Reduced padding for thinner gray section */
+    font-size: 1em;
+    margin-top: 30px; /* Creates space above the footer */
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensures the footer stays at the bottom for short pages */
+}
+
+main {
+    flex: 1; /* Pushes the footer down to the bottom */
+}
+
+.styled-footer p {
+    margin: 0;
+    font-family: 'Roboto Mono', monospace;
+}
+/* A teljes képernyőt lefedő modális háttér */
+.modal {
+    display: none; /* Alapértelmezés szerint rejtett */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8); /* Átlátszó fekete háttér */
+}
+
+/* A modális tartalma */
+.modal-content {
+    background-color: #1c1c1e;
+    margin: 10% auto; /* Az oldal közepére helyezés */
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #444;
+    width: 80%; /* A modális szélessége */
+    max-width: 600px; /* Maximális szélesség */
+    text-align: center;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-family: 'Roboto Mono', monospace;
+}
+
+/* Bezárás gomb */
+.modal-content .close {
+    color: #fff;
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: -10px;
+    margin-top: -10px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.modal-content .close:hover {
+    color: #ffd700;
+}
+
+/* Gombok a modális tartalomban */
+.modal-content button {
+    padding: 10px 20px;
+    margin: 10px 0;
+    font-size: 1em;
+    color: #000;
+    background-color: #00ffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-content button:hover {
+    background-color: #ffd700;
+}
+
+/* Styled List */
+.styled-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.styled-list li {
+    background: linear-gradient(90deg, #00ffff, #007bff);
+    margin: 10px 0;
+    padding: 10px 15px;
+    border-radius: 5px;
+    color: #fff;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.1em;
+    transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.styled-list li:hover {
+    transform: translateY(-5px);
+    background: linear-gradient(90deg, #ffd700, #ff4500);
+}
+
+/* Aktív navigációs link */
+nav a.active {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Reszponzív Stílus */
+@media (max-width: 600px) {
+    .header h1 {
+        font-size: 1.5em;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    button {
+        padding: 10px 20px;
+    }
+}
+
+.card p#contractAddress {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1em;
+    word-break: break-word; /* Ensures the address wraps nicely */
+    color: #00ffff; /* Bright color for visibility */
+    margin: 10px 0;
+}
+
+.copy-button {
+    padding: 10px 20px;
+    font-size: 0.9em;
+    border: none;
+    border-radius: 5px;
+    background-color: #00ffff;
+    color: #000;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.copy-button:hover {
+    background-color: #ffd700;
+}
+.etherscan-button {
+    padding: 10px 20px;
+    font-size: 0.9em;
+    border: none;
+    border-radius: 5px;
+    background-color: #00ffff;
+    color: #000;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.etherscan-button:hover {
+    background-color: #ffd700;
+}
+

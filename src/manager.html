@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lottery DApp - Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Manager Dashboard</h1>
+
+    </header>
+
+    <main class="container">
+       
+        <section class="section">
+            <h2>Account Management</h2>
+            <label for="accounts">Select Account:</label>
+            <select id="accounts" class="dropdown"></select>
+        </section>
+
+        
+        <section class="section">
+            <h2>Manage Tickets</h2>
+            <label for="ticketCount">Number of Tickets:</label>
+            <input id="ticketCount" type="number" min="1" value="1" onchange="updatePrice()" />
+            <p>Price: <span id="ticketPrice">0.001 ETH</span></p>
+            <button id="buyTicketsButton" onclick="buyTickets()">Buy Tickets</button>
+        </section>
+
+        
+        <section class="section">
+            <h2>Manage Lottery</h2>
+            <button onclick="requestRandomNumbers()">Request Random Number</button>
+            <button onclick="logolas()">Randomszam (console.log)</button>
+            <button class="important-button" onclick="pickWinner()">Pick Winner</button>
+            <p id="message"></p>
+        </section>
+
+        
+        <section class="section">
+            <h2>Previous Winners</h2>
+            <ul id="winners" class="styled-list">Loading...</ul>
+        </section>
+
+       
+        <section class="section">
+            <h2>Collected Fees</h2>
+            <p id="collectedFees">Loading...</p>
+        </section>
+
+        <section class="section">
+            <h2>Current Participants</h2>
+            <ul id="players" class="styled-list">Loading...</ul>
+        </section>
+    </main>
+
+    <footer class="styled-footer">
+        <p>Manage Lottery with Blockchain Security</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

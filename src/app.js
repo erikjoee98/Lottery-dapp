@@ -1,4 +1,4 @@
-const contractAddress = "0x1bD1CdE481e7e8Ac2695c45641CA4B6CA84c8Bbf"; 
+const contractAddress = "0x1bD1CdE481e7e8Ac2695c45641CA4B6CA84c8Bbf"; // A szerződés címe
 const contractABI = [
   {
     "inputs": [],
@@ -529,13 +529,13 @@ const contractABI = [
     "type": "function"
   }
 ];
-
+// Globális változók
 let web3;
 let lottery;
-const ticketPrice = 0.001;
+const ticketPrice = 0.001; // Jegy ára ETH-ban
 
-// Ellenőrizzük, hogy a felhasználó manager-e
 console.log("App.js inicializálás indítása");
+
 // Ellenőrizzük, hogy a felhasználó manager-e
 async function checkManager() {
     console.log("Manager ellenőrzés fut...");
@@ -552,13 +552,14 @@ async function checkManager() {
 
 window.addEventListener('load', async () => {
   if (typeof window.ethereum !== 'undefined') {
-      web3 = new Web3(window.ethereum);
-      await window.ethereum.enable();
+      web3 = new Web3(window.ethereum); // MetaMask használata
+      await window.ethereum.enable(); // MetaMask engedélyezése
       console.log("MetaMask engedélyezve");
 
-      lottery = new web3.eth.Contract(contractABI, contractAddress);
+      lottery = new web3.eth.Contract(contractABI, contractAddress); // Szerződés inicializálása
       console.log('Lottery contract initialized.');
 
+      // fiókok és manager címének lekérése
       const accounts = await web3.eth.getAccounts();
       const manager = await lottery.methods.manager().call();
 
@@ -628,10 +629,10 @@ window.ethereum.on('accountsChanged', async (accounts) => {
       const currentPage = window.location.pathname;
 
       if (accounts[0].toLowerCase() === manager.toLowerCase() && !currentPage.includes("manager.html")) {
-          // Csak akkor navigálj, ha még nem vagy a manager oldalon
+          // Csak akkor navigál, ha még nem vagy a manager oldalon
           window.location.href = "manager.html";
       } else if (accounts[0].toLowerCase() !== manager.toLowerCase() && !currentPage.includes("index.html")) {
-          // Csak akkor navigálj, ha nem vagy az index oldalon
+          // Csak akkor navigál, ha nem vagy az index oldalon
           window.location.href = "index.html";
       }
   }
@@ -657,9 +658,9 @@ function updatePrice() {
 
 async function buyTickets() {
   const ticketCount = document.getElementById("ticketCount").value; // Jegyek száma
-  const totalPrice = web3.utils.toWei((ticketCount * ticketPrice).toString(), "ether"); // Összeg ETH-ban Wei-re konvertálva
+  const totalPrice = web3.utils.toWei((ticketCount * ticketPrice).toString(), "ether"); // Összeg ETH-ban
 
-  const accountsDropdown = document.getElementById("accounts"); // Dropdown referencia
+  const accountsDropdown = document.getElementById("accounts"); // Dropdown account
   const selectedAccount = accountsDropdown.value; // A kiválasztott cím a dropdownból
 
   try {
@@ -676,7 +677,7 @@ async function buyTickets() {
       alert('Transaction failed. Make sure you have enough ETH.');
   }
 }
-
+//Randomszámot kér a szerződéstől
 async function requestRandomNumbers() {
   const message = document.getElementById("message");
 
@@ -695,7 +696,7 @@ async function requestRandomNumbers() {
       message.innerText = "Hiba történt a random szám kérésénél.";
   }
 }
-
+//Randomszámot tudjuk logolni a consolra. Látjuk, hogy megérkezett
 async function logolas(){
   const lastRequestId = await lottery.methods.lastRequestId().call();
   const randomResult = await lottery.methods.getRequestStatus(lastRequestId).call();
@@ -704,7 +705,7 @@ console.log(randomResult.randomWords[0]);
 }
 
 
-// Nyertes kiválasztása a szerződésből
+// Nyertes kiválasztása
 async function pickWinner() {
   const message = document.getElementById("message");
   const accountsDropdown = document.getElementById("accounts");
@@ -716,16 +717,23 @@ async function pickWinner() {
       if (players.length === 0) {
           throw new Error("Nincs játékos a játékban. Legalább egy játékos szükséges a nyertes kiválasztásához.");
       }
-
+      // Lekérjük a legutóbbi random számkérés azonosítóját a szerződésből.
+      // Ez az azonosító szükséges ahhoz, hogy ellenőrizzük a random szám státuszát.
       const lastRequestId = await lottery.methods.lastRequestId().call();
+      // A random számkérés státuszának lekérdezése az azonosító alapján.
+      // A következő adatokat kapjuk vissza:
+      // - `paid`: Az összeg, amit a kérésre elköltöttek (Wei-ben).
+      // - `fulfilled`: Boolean érték, ami jelzi, hogy a kérés teljesült-e.
+      // - `randomWords`: Egy tömb, amely tartalmazza a generált random számokat.
       const requestStatus = await lottery.methods.getRequestStatus(lastRequestId).call();
 
-      // Ellenőrizzük, hogy van-e random szám
+      // Ellenőrizzük, hogy a kérés teljesült-e.
       if (!requestStatus.fulfilled || requestStatus.randomWords.length === 0) {
           throw new Error("Nincs érvényes random szám. Kérj először egy random számot.");
       }
-
+      // A random számkérésből kapott első random számot eltároljuk a `randomResult` változóban.
       const randomResult = requestStatus.randomWords[0];
+      // Meghívjuk a szerződés `pickWinner` függvényét, hogy kiválasszuk a nyertest.
       await lottery.methods.pickWinner(randomResult).send({
           from: selectedAccount,
           gas: 3000000,
@@ -751,24 +759,33 @@ async function pickWinner() {
 }
 
 
-
+// A nyertesek és az ő nyereményeik betöltése a szerződésből, majd megjelenítése az oldalon.
 async function loadWinnersAndRewards() {
     const winnersElement = document.getElementById("winners");
     if (!winnersElement) {
         console.warn("Winners elem nem található.");
         return;
     }
-
+    // Az elem tartalmának törlése, hogy ne legyenek duplikált adatok.
     winnersElement.innerHTML = "";
 
     try {
+         // Lekérjük a nyertesek címét a szerződésből.
         const winners = await lottery.methods.getWinners().call();
+
+        // Lekérjük a nyertesek nyereményeit a szerződésből.
         const rewards = await lottery.methods.getRewards().call();
 
+        // Végigmegyünk a nyertesek listáján.
         winners.forEach((winner, index) => {
+            // Az aktuális nyertes nyereményének átalakítása Wei-ből ETH-ba.
             const reward = web3.utils.fromWei(rewards[index], 'ether');
+
+            // Új listaelem létrehozása a HTML-ben a nyertes és a nyeremény megjelenítéséhez.
             const listItem = document.createElement("li");
             listItem.innerText = `Winner: ${winner}, Reward: ${reward} ETH`;
+
+            // A listaelem hozzáadása a "winners" elemhez.
             winnersElement.appendChild(listItem);
         });
     } catch (error) {
@@ -776,6 +793,7 @@ async function loadWinnersAndRewards() {
     }
 }
 
+// A jelenlegi játékosok betöltése és megjelenítése a játékosok listájában.
 async function loadEnteredPool() {
   const poolElement = document.getElementById("players");
   if (!poolElement) {
@@ -785,19 +803,25 @@ async function loadEnteredPool() {
   poolElement.innerHTML = "";
 
   try {
+      // Lekérjük a játékosok címét a szerződésből.
       const players = await lottery.methods.getPlayers().call();
 
-      players.forEach((player, index) => {
+          // Végigmegyünk a játékosok listáján.
+          players.forEach((player, index) => {
+          // Létrehozunk egy új listaelemet (HTML <li> tag) minden játékos számára.  
           const listItem = document.createElement("li");
           listItem.innerText = `Játékos: ${player}`;
+          // Hozzáadjuk az új listaelemet a játékosok listájához.
           poolElement.appendChild(listItem);
       });
   } catch (error) {
       console.error("Hiba a játékosok betöltésekor:", error);
   }
 }
-
+// A szerződés által összegyűjtött díjak frissítése és megjelenítése a felületen.
 async function updateCollectedFees() {
+
+  // Ellenőrizzük, hogy az oldal tartalmazza-e a "collectedFees" azonosítójú HTML elemet.
   const collectedFeesElement = document.getElementById("collectedFees");
 
   if (!collectedFeesElement) {
@@ -806,8 +830,13 @@ async function updateCollectedFees() {
   }
 
   try {
+
+       // Lekérjük a szerződésből az összegyűjtött díjak összegét Wei-ben.
       const collectedFees = await lottery.methods.getCollectedFees().call(); 
+
+       // Átváltjuk az összeget Wei-ből ETH-ba.
       const collectedFeesInEth = web3.utils.fromWei(collectedFees, "ether"); 
+      // Megjelenítjük az összegyűjtött díjakat a HTML elemben.
       collectedFeesElement.innerText = `${collectedFeesInEth} ETH`; 
   } catch (error) {
       console.error("Error fetching collected fees:", error);
